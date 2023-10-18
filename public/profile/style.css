@@ -1,0 +1,34 @@
+.container{
+    max-width: fit-content;
+    min-width: 200px;
+    box-shadow: 2px 2px 20px 5px rgb(212, 210, 210);
+    padding: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    background-color: rgb(247, 247, 228);
+    border-radius: 5px;
+    text-align: center;
+    height: 300px;
+}
+.profileImage>img{
+    height: 130px;
+    width: 150px;
+    border: 2px solid yellow;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.profileImage{
+    margin-left: auto;
+    margin-right: auto;
+}
+#LogOut{
+    margin-top: 20px;
+    height: 25px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background-color: yellow;
+    cursor: pointer;
+}

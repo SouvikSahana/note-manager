@@ -1,0 +1,42 @@
+.container{
+    border: 1px solid yellow;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20vh;
+    width: fit-content;
+    height: 300px;
+    box-shadow: 2px 2px 20px 5px rgb(212, 210, 210);
+    padding: 20px;
+    border-radius: 15px;
+    background-color: rgb(247, 247, 228);
+}
+.container>.header{
+    text-align: center;
+    /* background-color: yellow; */
+    padding: 5px;
+    margin-bottom: 50px;
+    font-size: 25px;
+    color: blue;
+    border-bottom: 1px solid white;
+}
+.inputField{
+    height: 45px;
+    text-align: center;
+}
+.inputField> input{
+    height: 30px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid green;
+}
+#Submit{
+    margin-top: 20px;
+    width: 100%;
+    padding: 8px;
+    background-color: yellow;
+    border-radius: 5px;
+    border: none;
+}
+#prompt{
+    text-align: center;
+}
