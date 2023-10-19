@@ -1,5 +1,6 @@
 const mongoose=require("mongoose")
 const bcrypt=require("bcrypt")
+require('dotenv').config();
 const jwt=require("jsonwebtoken")
 
 const url="mongodb://127.0.0.1:27017/MyDatabase?retryWrites=true&w=majority"
@@ -36,8 +37,14 @@ const taskSchema=new mongoose.Schema({
     },
     description:{
         type:"String"
+    },
+    owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }
 })
+
+
 
 userSchema.statics.findByCredentials=async(email, password)=>{
     const User = await user.findOne({ email })
@@ -53,16 +60,26 @@ userSchema.statics.findByCredentials=async(email, password)=>{
 }
 userSchema.statics.getUserProfile=async(token)=>{
     try{
-        const id=jwt.verify(token,"Souvik Sahana")
+        const id=jwt.verify(token,process.env.token_key)
         const User=await user.findById(id._id)
         return User
     }catch(error){
         throw new Error("Internal error")
     }
 }
+taskSchema.statics.getTasks=async (token)=>{
+    try{
+        const id=jwt.verify(token,process.env.token_key)
+        const Task=await tasks.find({owner:id._id})
+        const updatedTaskArray= Task.map((arr)=>{ return {title:arr.title,description: arr.description, _id:arr._id}})
+        return updatedTaskArray
+    }catch(error){
+        throw new Error(error.message)
+    }
+}
 userSchema.methods.generateAuthToken=async function(){
     const user=this
-    const token=jwt.sign({_id:user._id},"Souvik Sahana")
+    const token=jwt.sign({_id:user._id},process.env.token_key)
     user.tokens=user.tokens.concat({token})
     await user.save()
     return token
@@ -99,11 +116,12 @@ async function addUser(name,email, password){
         }
     }
 }
-async function addTask(title, description){
-    const task=tasks({title, description})
+async function addTask(title, description,token){
+    const id=jwt.verify(token,process.env.token_key)
+    const task=tasks({title, description, owner: id._id})
     try{
-        task.save()
-        return "Note added Successfully"
+        const data=task.save()
+        return data
     }catch(error){
         return "Error happen to add note"
     }
@@ -118,5 +136,6 @@ async function logout(token){
 }
 const userLogin=user.findByCredentials
 const getUserProfile=user.getUserProfile
+const getTasks=tasks.getTasks
 
-module.exports={addUser,userLogin, addTask,getUserProfile,logout}
+module.exports={addUser,userLogin, addTask,getUserProfile,logout,getTasks}

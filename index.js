@@ -1,6 +1,6 @@
 const express=require("express")
 const authChecker=require("./middleware")
-const {addUser,userLogin,addTask,getUserProfile,logout}=require("./database")
+const {addUser,userLogin,addTask,getUserProfile,logout, getTasks}=require("./database")
 
 const app=express()
 app.use(express.json())
@@ -38,9 +38,22 @@ app.post("/login",async (req,res)=>{
 })
 app.post("/addnote",authChecker,async (req,res)=>{
     const data=req.body
-    const response=await addTask(data.title,data.description)
-    res.send({response})
+    const token=req.headers.authorization
+    const response=await addTask(data.title,data.description,token)
+    res.send(response)
 })
+app.post("/gettasks",async (req,res)=>{
+    const token=req.headers.authorization
+    try{
+        const tasks=await getTasks(token)
+        res.json(tasks)
+    }catch(error){
+        res.json({
+            message: error.message
+        })
+    }
+})
+
 app.post("/getprofile",authChecker,async(req,res)=>{
     try{
         const userProfle=await getUserProfile(req.headers.authorization)

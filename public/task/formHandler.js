@@ -1,3 +1,5 @@
+const taskContainer=document.getElementById("taskContainer")
+
 document.addEventListener('DOMContentLoaded', function() {
     const token= localStorage.getItem("token")
     if(token===null){
@@ -12,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         addTask(title,description)
     });
+    getTasks()  
 });
 
 async function addTask(title,description){
@@ -29,7 +32,43 @@ async function addTask(title,description){
     if(responseData.message){
         alert(responseData.message)
     }else{
-        console.log(responseData)
+        addTaskTemplate(responseData._id, responseData.title, responseData.description)
     }
     
+}
+
+async function getTasks(){
+    const options={
+        method:'post',
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization': localStorage.getItem("token")
+        }
+    }
+    const response=await fetch('/gettasks',options)
+    const responseData=await  response.json()
+    if(responseData.message){
+        alert(responseData.message)
+    }else{
+        responseData.forEach((arr)=>{
+            addTaskTemplate(arr._id,arr.title, arr.description)
+        })
+    }
+}
+
+function addTaskTemplate(_id,title, description){
+    const task=document.createElement("div")
+    task.setAttribute('class','task')
+    const _idElement= document.createElement("span")
+    _idElement.setAttribute("class","_id")
+    _idElement.textContent= ",   (id: "+_id+ ")"
+    const titleElement= document.createElement("span")
+    titleElement.textContent= title
+    const descriptionElement= document.createElement("p")
+    descriptionElement.textContent= description
+    
+    task.appendChild(titleElement)
+    task.appendChild(_idElement)
+    task.appendChild(descriptionElement)
+    taskContainer.appendChild(task)
 }
