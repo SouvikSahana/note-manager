@@ -28,6 +28,8 @@ const userSchema=new mongoose.Schema({
             required: true
         }
     }]
+},{
+    timestamps: true
 })
 
 const taskSchema=new mongoose.Schema({
@@ -42,6 +44,8 @@ const taskSchema=new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     }
+},{
+    timestamps:true
 })
 
 
